@@ -29,7 +29,9 @@ public class EditNoteActivity extends AppCompatActivity {
 
         // Xử lý sự kiện khi người dùng nhấn nút Save/Cancel
         Button btnSave = findViewById(R.id.btn_save);
+        btnSave.setText(MainActivity.getString(this, "save"));
         Button btnCancel = findViewById(R.id.btn_cancel);
+        btnCancel.setText(MainActivity.getString(this, "cancel"));
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

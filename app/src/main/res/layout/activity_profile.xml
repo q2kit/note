@@ -4,6 +4,8 @@
     android:id="@+id/profile_layout"
     android:layout_height="match_parent">
 
+
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/avatar"
         android:layout_width="120dp"
@@ -32,5 +34,18 @@
         android:layout_marginTop="416dp"
         android:layout_centerHorizontal="true"
         android:text="Login" />
+
+    <ImageButton
+        android:id="@+id/language_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:minWidth="35dp"
+        android:minHeight="35dp"
+        android:background="#252525"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_language" />
 
 </RelativeLayout>

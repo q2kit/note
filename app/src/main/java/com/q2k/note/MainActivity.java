@@ -85,14 +85,22 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.OnDel
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Khởi tạo NoteDataSource và mở kết nối với cơ sở dữ liệu
+        // check language
+        SharedPreferences sharedPreferences = getSharedPreferences("language", MODE_PRIVATE);
+        String language = sharedPreferences.getString("language", "");
+        if (language.equals("")) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("language", "en");
+            editor.apply();
+        }
 
+        // Khởi tạo NoteDataSource và mở kết nối với cơ sở dữ liệu
         dataSource = new NoteDataSource(this);
         dataSource.open();
 
         // Khởi tạo toast
-        toast_sort_by_created_at = Toast.makeText(this, "Sort by created at", Toast.LENGTH_SHORT);
-        toast_sort_by_updated_at = Toast.makeText(this, "Sort by updated at", Toast.LENGTH_SHORT);
+        toast_sort_by_created_at = Toast.makeText(this, getString(this, "sort_by_created_at"), Toast.LENGTH_SHORT);
+        toast_sort_by_updated_at = Toast.makeText(this, getString(this, "sort_by_updated_at"), Toast.LENGTH_SHORT);
 
         noteList = new ArrayList<>();
         // Lấy dữ liệu note từ cơ sở dữ liệu
@@ -114,10 +122,11 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.OnDel
         fab_account = findViewById(R.id.fab_account);
         fab_sync = findViewById(R.id.fab_sync);
         name = findViewById(R.id.name);
+        name.setText(getString(this, "guest"));
         avatar = findViewById(R.id.avatar);
         if (is_logged_in()) {
             // Lấy thông tin người dùng từ SharedPreferences
-            SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
+            sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
             String name = sharedPreferences.getString("name", "");
             String avatar_url = sharedPreferences.getString("avatar", "");
             // Hiển thị thông tin người dùng
@@ -163,6 +172,10 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.OnDel
 
         btn_sort.setOnClickListener(v -> {
             noteList = dataSource.getAllNotes();
+            if (noteList.isEmpty()) {
+                Toast.makeText(this, getString(this, "no_note"), Toast.LENGTH_SHORT).show();
+                return;
+            }
             if (sort_by_created_at) {
                 Collections.sort(noteList, new Note.SortByUpdatedAt());
                 sort_by_created_at = false;
@@ -278,7 +291,8 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.OnDel
     public void onItemDeleted(Note deletedNote) {
         // Handle the deleted item, such as showing the undo option
         // You can display a Snackbar or any other UI element here
-        Toast.makeText(this, "Note deleted: " + deletedNote.getTitle(), Toast.LENGTH_SHORT).show();
+        String note_deleted = getString(this, "note_deleted");
+        Toast.makeText(this, note_deleted + ": " + deletedNote.getTitle(), Toast.LENGTH_LONG).show();
     }
     @Override
     protected void onDestroy() {
@@ -352,7 +366,9 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.OnDel
                             dataSource.syncDone();
                             dataSource.close();
                             updateNoteList();
-                            Toast.makeText(MainActivity.this, "Push: " + push + ", Pull: " + pull, Toast.LENGTH_LONG).show();
+                            String push_str = MainActivity.getString(MainActivity.this, "push");
+                            String pull_str = MainActivity.getString(MainActivity.this, "pull");
+                            Toast.makeText(MainActivity.this, push_str + ": " + push + "\n" + pull_str + ": " + pull, Toast.LENGTH_LONG).show();
                         }
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
@@ -367,5 +383,11 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.OnDel
             });
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(request);
+    }
+    public static String getString(Context context, String code) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("language", MODE_PRIVATE);
+        String language = sharedPreferences.getString("language", "en");
+        code += "_" + language;
+        return context.getString(context.getResources().getIdentifier(code, "string", context.getPackageName()));
     }
 }

@@ -6,5 +6,32 @@
         <item>Sắp xếp theo thời gian tạo</item>
         <item>Sắp xếp theo thời gian sửa</item>
     </string-array>
-
+    <string name="sort_by_created_at_vi">Sắp xếp theo thời gian tạo</string>
+    <string name="sort_by_created_at_en">Sort by created at</string>
+    <string name="sort_by_updated_at_vi">Sắp xếp theo thời gian sửa</string>
+    <string name="sort_by_updated_at_en">Sort by updated at</string>
+    <string name="no_note_vi">Không có ghi chú nào</string>
+    <string name="no_note_en">No notes</string>
+    <string name="guest_vi">Khách</string>
+    <string name="guest_en">Guest</string>
+    <string name="save_vi">Lưu</string>
+    <string name="save_en">Save</string>
+    <string name="cancel_vi">Hủy</string>
+    <string name="cancel_en">Cancel</string>
+    <string name="logout_vi">Đăng xuất</string>
+    <string name="logout_en">Logout</string>
+    <string name="login_vi">Đăng nhập</string>
+    <string name="login_en">Login</string>
+    <string name="warning_vi">Cảnh báo!</string>
+    <string name="warning_en">Warning!</string>
+    <string name="push_vi">Tải lên</string>
+    <string name="push_en">Push</string>
+    <string name="pull_vi">Tải xuống</string>
+    <string name="pull_en">Pull</string>
+    <string name="delete_note_warning_vi">Đồng bộ ghi chú trước khi đăng xuất!\nHoặc bạn sẽ mất tất cả ghi chú.</string>
+    <string name="delete_note_warning_en">Sync your notes before logging out!\nOr you will lose all your notes.</string>
+    <string name="change_language_warning_vi">Đổi ngôn ngữ yêu cầu khởi động lại ứng dụng.\nBạn có muốn tiếp tục?</string>
+    <string name="change_language_warning_en">Changing language requires restarting the app.\nDo you want to continue?</string>
+    <string name="note_deleted_vi">Đã xóa ghi chú</string>
+    <string name="note_deleted_en">Note deleted</string>
 </resources>

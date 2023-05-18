@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +45,7 @@ public class ProfileActivity extends AppCompatActivity {
     private CircleImageView avatar;
     private TextView name;
     private Button btn;
+    private ImageButton language_button;
     SignInClient oneTapClient;
     BeginSignInRequest signUpRequest;
     protected boolean is_logged_in() {
@@ -77,8 +79,40 @@ public class ProfileActivity extends AppCompatActivity {
         // Ánh xạ các thành phần từ layout
         avatar = findViewById(R.id.avatar);
         name = findViewById(R.id.name);
+        name.setText(MainActivity.getString(this, "guest"));
         btn = findViewById(R.id.btn);
-
+        language_button = findViewById(R.id.language_button);
+        language_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // show confirm
+                AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
+                builder.setTitle(MainActivity.getString(ProfileActivity.this, "warning"))
+                        .setMessage(MainActivity.getString(ProfileActivity.this, "change_language_warning"))
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // clear all activities in stack
+                                Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                                // change language
+                                SharedPreferences sharedPreferences = getSharedPreferences("language", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                if (sharedPreferences.getString("language", "en").equals("en")) {
+                                    editor.putString("language", "vi");
+                                    Toast.makeText(ProfileActivity.this, "Ngôn ngữ đã được chuyển sang Tiếng Việt", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    editor.putString("language", "en");
+                                    Toast.makeText(ProfileActivity.this, "Language changed to English", Toast.LENGTH_SHORT).show();
+                                }
+                                editor.apply();
+                            }
+                        });
+                builder.create().show();
+            }
+        });
+        btn.setText(MainActivity.getString(this, "login"));
         // config GoogleSignIn
         oneTapClient = Identity.getSignInClient(this);
         signUpRequest = BeginSignInRequest.builder()
@@ -91,7 +125,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
         if (is_logged_in()) {
-            btn.setText("Logout");
+            btn.setText(MainActivity.getString(this, "logout"));
             SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
             name.setText(sharedPreferences.getString("name", ""));
 
@@ -104,18 +138,18 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (is_logged_in()) { // logout
                     AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
-                    builder.setTitle("Warning!")
-                        .setMessage("Sync your notes before logging out!\nOr you will lose all your notes.")
-                        .setPositiveButton("Logout", new DialogInterface.OnClickListener() {
+                    builder.setTitle(MainActivity.getString(ProfileActivity.this, "warning"))
+                        .setMessage(MainActivity.getString(ProfileActivity.this, "delete_note_warning"))
+                        .setPositiveButton(MainActivity.getString(ProfileActivity.this, "logout"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 editor.putBoolean("is_logged_in", false);
                                 editor.apply();
-                                btn.setText("Login");
+                                btn.setText(MainActivity.getString(ProfileActivity.this, "login"));
                                 avatar.setImageResource(R.drawable.ic_avatar);
-                                name.setText("Guest");
+                                name.setText(MainActivity.getString(ProfileActivity.this, "guest"));
                                 // clear all notes
                                 NoteDataSource dataSource;
                                 dataSource = new NoteDataSource(ProfileActivity.this);
@@ -124,7 +158,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 dataSource.close();
                             }
                         })
-                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        .setNegativeButton(MainActivity.getString(ProfileActivity.this, "cancel"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 // Hủy bỏ hộp thoại và không thực hiện đăng xuất
@@ -194,7 +228,7 @@ public class ProfileActivity extends AppCompatActivity {
             editor.putString("avatar", avatar);
             this.name.setText(name);
             Glide.with(this).load(avatar).into(this.avatar);
-            btn.setText("Logout");
+            btn.setText(MainActivity.getString(this, "logout"));
             editor.apply();
         } catch (JSONException e) {
             e.printStackTrace();
