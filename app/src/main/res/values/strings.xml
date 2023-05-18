@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Note</string>
+    <string name="web_client_id">591821112280-fev1l00vnht20j31a02n05e80p64ie8l.apps.googleusercontent.com</string>
+    <string-array name="sort_options">
+        <item>Sắp xếp theo tên</item>
+        <item>Sắp xếp theo thời gian tạo</item>
+        <item>Sắp xếp theo thời gian sửa</item>
+    </string-array>
+
+</resources>
